@@ -265,19 +265,22 @@ class DropBoxController {
           this.btnSendFileEl.disabled = true;
 
           this.uploadTask(event.target.files).then(responses => {
-
+                
               responses.forEach(resp => {
+                
+                firebase.storage().ref().child(resp.fullPath).getDownloadURL().then(url => {
+            
+                    this.getFirebaseRef().push().set({
+                      name: resp.name,
+                      type: resp.contentType,
+                      path: url,
+                      size: resp.size
+                    });
+         
+                  })
+                  
 
-                  resp.ref.getDownloadURL().then(data => {
-
-                      this.getFirebaseRef().push().set({
-                          name: resp.name,
-                          type: resp.contentType,
-                          path: data,
-                          size: resp.size
-                      });
-
-                  });
+                  
 
               });
 
